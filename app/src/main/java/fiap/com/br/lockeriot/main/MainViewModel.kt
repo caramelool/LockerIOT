@@ -3,15 +3,18 @@ package fiap.com.br.lockeriot.main
 import android.arch.lifecycle.*
 import fiap.com.br.lockeriot.fingerprint.FingerprintHandler
 import fiap.com.br.lockeriot.fingerprint.FingerprintStatus
+import fiap.com.br.lockeriot.repository.LockerStatus
+import fiap.com.br.lockeriot.repository.LockerStatusRepository
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
 
 class MainViewModel(
-        private val fingerprintHandler: FingerprintHandler
+        private val fingerprintHandler: FingerprintHandler,
+        private val lockerStatusRepository: LockerStatusRepository
 ): ViewModel(), LifecycleObserver {
 
-    val statusLiveData = MutableLiveData<FingerprintStatus>()
+    val fingerprintLiveData = MutableLiveData<FingerprintStatus>()
         get() = field.apply {
             if (value == null) {
                 value = fingerprintHandler.value
@@ -19,7 +22,15 @@ class MainViewModel(
             }
         }
 
-    private fun observerFingerprint() = with(statusLiveData) {
+    val lockerStatusLivedata = MutableLiveData<LockerStatus>()
+        get() = field.apply {
+            if (value == null) {
+                value = lockerStatusRepository.value
+                observerLockerStatus()
+            }
+        }
+
+    private fun observerFingerprint() = with(fingerprintLiveData) {
         fingerprintHandler.observeForever {
             postValue(it)
         }
@@ -27,6 +38,7 @@ class MainViewModel(
             launch(UI) {
                 when (status) {
                     is FingerprintStatus.Success -> {
+                        notifyLockerRepository()
                         delayToIdle()
                         startFingerprint()
                     }
@@ -42,9 +54,26 @@ class MainViewModel(
         }
     }
 
+    private fun observerLockerStatus() = with(lockerStatusLivedata) {
+        lockerStatusRepository.observeForever {
+            postValue(it)
+        }
+    }
+
+    private fun notifyLockerRepository() = with(lockerStatusRepository) {
+        when (value) {
+            is LockerStatus.Open -> {
+                postValue(LockerStatus.Close())
+            }
+            is LockerStatus.Close -> {
+                postValue(LockerStatus.Open())
+            }
+        }
+    }
+
     private suspend fun delayToIdle(time: Long = 2000) {
         delay(time)
-        statusLiveData.postValue(FingerprintStatus.Idle())
+        fingerprintLiveData.postValue(FingerprintStatus.Idle())
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
@@ -62,10 +91,11 @@ class MainViewModel(
      */
 
     class Factory(
-            private val handler: FingerprintHandler
+            private val fingerprintHandler: FingerprintHandler,
+            private val lockerStatusRepository: LockerStatusRepository
     ): ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return MainViewModel(handler) as T
+            return MainViewModel(fingerprintHandler, lockerStatusRepository) as T
         }
     }
 }

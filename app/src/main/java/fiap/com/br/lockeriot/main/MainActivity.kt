@@ -18,13 +18,18 @@ import fiap.com.br.lockeriot.main.LottieColorManager.LottieColor
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import javax.inject.Inject
+import android.view.View
+import fiap.com.br.lockeriot.extension.playAnimation
+import fiap.com.br.lockeriot.repository.LockerStatus
+
 
 class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var viewModel: MainViewModel
 
-    private val lottieColorManager by lazy { LottieColorManager(fingerLottie) }
+    private val fingerLottieManager by lazy { LottieColorManager(fingerLottie) }
+    private val lockLottieManager by lazy { LottieColorManager(lockLottie) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
@@ -33,23 +38,39 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
+        lockLottieManager.setColor(LottieColor.GRAY, false)
+
         with(viewModel) {
             lifecycle.addObserver(this)
-            observe(statusLiveData, ::onStatusChange)
+            observe(fingerprintLiveData, ::onFingerprintChange)
+            observe(lockerStatusLivedata, ::onLockerChange)
         }
     }
 
-    private fun onStatusChange(status: FingerprintStatus?) {
+    private fun onFingerprintChange(status: FingerprintStatus?) {
         when (status) {
+            is FingerprintStatus.Success -> {
+                fingerLottie.visibility = View.VISIBLE
+                fingerLottieManager.setColor(LottieColor.GREEN)
+            }
             is FingerprintStatus.Failure,
             is FingerprintStatus.Error -> {
-                lottieColorManager.setColor(LottieColor.RED)
-            }
-            is FingerprintStatus.Success -> {
-                lottieColorManager.setColor(LottieColor.GREEN)
+                fingerLottie.visibility = View.VISIBLE
+                fingerLottieManager.setColor(LottieColor.RED)
             }
             is FingerprintStatus.Idle -> {
-                lottieColorManager.setColor(LottieColor.GRAY)
+                fingerLottie.playAnimation( 1f, 0f)
+            }
+        }
+    }
+
+    private fun onLockerChange(status: LockerStatus?) {
+        when (status) {
+            is LockerStatus.Open -> {
+                lockLottie.playAnimation( 0f, 0.5f)
+            }
+            is LockerStatus.Close -> {
+                lockLottie.playAnimation(0.5f, 1f)
             }
         }
     }
@@ -67,13 +88,18 @@ class LottieColorManager(
     }
 
     enum class LottieColor(val value: PorterDuffColorFilter) {
+        NONE(PorterDuffColorFilter(Color.TRANSPARENT, PorterDuff.Mode.SRC_ATOP)),
         GRAY(PorterDuffColorFilter(Color.LTGRAY, PorterDuff.Mode.SRC_ATOP)),
         RED(PorterDuffColorFilter(Color.RED, PorterDuff.Mode.SRC_ATOP)),
         GREEN(PorterDuffColorFilter(Color.GREEN, PorterDuff.Mode.SRC_ATOP))
     }
 
-    fun setColor(color: LottieColor) {
+    fun setColor(color: LottieColor, playAnimation: Boolean = true) {
         setValue(color.value)
+        if (playAnimation) playAnimation()
+    }
+
+    fun playAnimation() {
         lottieView.playAnimation()
     }
 }
