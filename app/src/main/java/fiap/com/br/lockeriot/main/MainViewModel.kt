@@ -1,7 +1,6 @@
 package fiap.com.br.lockeriot.main
 
 import android.arch.lifecycle.*
-import android.util.Log
 import fiap.com.br.lockeriot.fingerprint.FingerprintHandler
 import fiap.com.br.lockeriot.fingerprint.FingerprintStatus
 import fiap.com.br.lockeriot.repository.LockerStatus

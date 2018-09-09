@@ -6,6 +6,7 @@ import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.view.View
 import com.airbnb.lottie.LottieAnimationView
 import com.airbnb.lottie.LottieProperty
 import com.airbnb.lottie.model.KeyPath
@@ -13,14 +14,13 @@ import com.airbnb.lottie.value.LottieValueCallback
 import dagger.android.AndroidInjection
 import fiap.com.br.lockeriot.R
 import fiap.com.br.lockeriot.extension.observe
+import fiap.com.br.lockeriot.extension.playAnimation
 import fiap.com.br.lockeriot.fingerprint.FingerprintStatus
 import fiap.com.br.lockeriot.main.LottieColorManager.LottieColor
+import fiap.com.br.lockeriot.repository.LockerStatus
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import javax.inject.Inject
-import android.view.View
-import fiap.com.br.lockeriot.extension.playAnimation
-import fiap.com.br.lockeriot.repository.LockerStatus
 
 class MainActivity : AppCompatActivity() {
 
