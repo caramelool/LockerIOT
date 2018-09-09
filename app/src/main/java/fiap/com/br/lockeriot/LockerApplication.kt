@@ -17,11 +17,8 @@ class LockerApplication: Application(), HasActivityInjector {
 
     override fun onCreate() {
         super.onCreate()
-        DaggerApplicationComponent
-                .builder()
+        DaggerApplicationComponent.builder()
                 .applicationModule(ApplicationModule(this))
-                .retrofitModule(RetrofitModule())
-                .androidModule(AndroidModule())
                 .build()
                 .inject(this)
     }
