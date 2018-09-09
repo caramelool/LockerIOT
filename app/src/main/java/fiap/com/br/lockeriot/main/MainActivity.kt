@@ -56,7 +56,9 @@ class MainActivity : AppCompatActivity() {
                 fingerLottieManager.setColor(LottieColor.RED)
             }
             is FingerprintStatus.Idle -> {
-                fingerLottieManager.playAnimation( 1f, 0f)
+                fingerLottieManager.playAnimation(1f, 0f) {
+                    fingerLottie.visibility = View.GONE
+                }
             }
         }
     }
@@ -91,12 +93,12 @@ class LottieColorManager(
         GREEN(PorterDuffColorFilter(Color.GREEN, PorterDuff.Mode.SRC_ATOP))
     }
 
-    fun setColor(color: LottieColor, playAnimation: Boolean = true) {
+    fun setColor(color: LottieColor) {
         setValue(color.value)
         lottieView.playAnimation()
     }
 
-    fun playAnimation(start: Float, end: Float) {
-        lottieView.playAnimation(start, end)
+    fun playAnimation(start: Float, end: Float, onComplete: () -> Unit = {}) {
+        lottieView.playAnimation(start, end, onComplete = onComplete)
     }
 }
