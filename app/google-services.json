@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1079849599175",
+    "firebase_url": "https://lockeriot-aaad2.firebaseio.com",
+    "project_id": "lockeriot-aaad2",
+    "storage_bucket": "lockeriot-aaad2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1079849599175:android:c1382eb62900c701",
+        "android_client_info": {
+          "package_name": "fiap.com.br.lockeriot"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1079849599175-opsqfejmbce9r0id583cs62vrdnam3fh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "fiap.com.br.lockeriot",
+            "certificate_hash": "b71d4c66a60c8ba4d2713b3546eb14070627b0e1"
+          }
+        },
+        {
+          "client_id": "1079849599175-222n92791kbpj05s19jvp69usen7g8lf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBkmtMRQOd8QIKQvfUlWduRxmABU5GDOSM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1079849599175-222n92791kbpj05s19jvp69usen7g8lf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

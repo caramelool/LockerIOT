@@ -2,10 +2,7 @@ package fiap.com.br.lockeriot.dagger
 
 import dagger.Component
 import fiap.com.br.lockeriot.LockerApplication
-import fiap.com.br.lockeriot.dagger.module.AndroidModule
-import fiap.com.br.lockeriot.dagger.module.ApplicationModule
-import fiap.com.br.lockeriot.dagger.module.RetrofitModule
-import fiap.com.br.lockeriot.dagger.module.ViewModelModule
+import fiap.com.br.lockeriot.dagger.module.*
 import fiap.com.br.lockeriot.main.MainContributeModule
 import javax.inject.Singleton
 
@@ -15,6 +12,7 @@ import javax.inject.Singleton
     RetrofitModule::class,
     AndroidModule::class,
     ViewModelModule::class,
+    FirebaseModule::class,
     MainContributeModule::class
 ])
 interface ApplicationComponent {
