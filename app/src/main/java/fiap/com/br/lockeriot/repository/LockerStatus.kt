@@ -16,4 +16,15 @@ class LockerStatusRepository @Inject constructor(
         value = LockerStatus.Close()
     }
 
+    fun notifty() {
+        when (value) {
+            is LockerStatus.Open -> {
+                postValue(LockerStatus.Close())
+            }
+            is LockerStatus.Close -> {
+                postValue(LockerStatus.Open())
+            }
+        }
+    }
+
 }

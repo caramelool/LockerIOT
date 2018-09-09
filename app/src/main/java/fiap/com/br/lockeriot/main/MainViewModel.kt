@@ -1,6 +1,7 @@
 package fiap.com.br.lockeriot.main
 
 import android.arch.lifecycle.*
+import android.util.Log
 import fiap.com.br.lockeriot.fingerprint.FingerprintHandler
 import fiap.com.br.lockeriot.fingerprint.FingerprintStatus
 import fiap.com.br.lockeriot.repository.LockerStatus
@@ -22,7 +23,7 @@ class MainViewModel(
             }
         }
 
-    val lockerStatusLivedata = MutableLiveData<LockerStatus>()
+    val lockerStatusLiveData = MutableLiveData<LockerStatus>()
         get() = field.apply {
             if (value == null) {
                 value = lockerStatusRepository.value
@@ -54,21 +55,14 @@ class MainViewModel(
         }
     }
 
-    private fun observerLockerStatus() = with(lockerStatusLivedata) {
+    private fun observerLockerStatus() = with(lockerStatusLiveData) {
         lockerStatusRepository.observeForever {
             postValue(it)
         }
     }
 
-    private fun notifyLockerRepository() = with(lockerStatusRepository) {
-        when (value) {
-            is LockerStatus.Open -> {
-                postValue(LockerStatus.Close())
-            }
-            is LockerStatus.Close -> {
-                postValue(LockerStatus.Open())
-            }
-        }
+    private fun notifyLockerRepository() {
+        lockerStatusRepository.notifty()
     }
 
     private suspend fun delayToIdle(time: Long = 2000) {

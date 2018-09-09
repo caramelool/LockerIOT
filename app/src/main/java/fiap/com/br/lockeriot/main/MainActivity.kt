@@ -22,7 +22,6 @@ import android.view.View
 import fiap.com.br.lockeriot.extension.playAnimation
 import fiap.com.br.lockeriot.repository.LockerStatus
 
-
 class MainActivity : AppCompatActivity() {
 
     @Inject
@@ -32,18 +31,16 @@ class MainActivity : AppCompatActivity() {
     private val lockLottieManager by lazy { LottieColorManager(lockLottie) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         AndroidInjection.inject(this)
 
-        super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
-
-        lockLottieManager.setColor(LottieColor.GRAY, false)
 
         with(viewModel) {
             lifecycle.addObserver(this)
             observe(fingerprintLiveData, ::onFingerprintChange)
-            observe(lockerStatusLivedata, ::onLockerChange)
+            observe(lockerStatusLiveData, ::onLockerChange)
         }
     }
 
@@ -59,7 +56,7 @@ class MainActivity : AppCompatActivity() {
                 fingerLottieManager.setColor(LottieColor.RED)
             }
             is FingerprintStatus.Idle -> {
-                fingerLottie.playAnimation( 1f, 0f)
+                fingerLottieManager.playAnimation( 1f, 0f)
             }
         }
     }
@@ -67,10 +64,10 @@ class MainActivity : AppCompatActivity() {
     private fun onLockerChange(status: LockerStatus?) {
         when (status) {
             is LockerStatus.Open -> {
-                lockLottie.playAnimation( 0f, 0.5f)
+                lockLottieManager.playAnimation(0f, 0.5f)
             }
             is LockerStatus.Close -> {
-                lockLottie.playAnimation(0.5f, 1f)
+                lockLottieManager.playAnimation(0.5f, 1f)
             }
         }
     }
@@ -96,10 +93,10 @@ class LottieColorManager(
 
     fun setColor(color: LottieColor, playAnimation: Boolean = true) {
         setValue(color.value)
-        if (playAnimation) playAnimation()
+        lottieView.playAnimation()
     }
 
-    fun playAnimation() {
-        lottieView.playAnimation()
+    fun playAnimation(start: Float, end: Float) {
+        lottieView.playAnimation(start, end)
     }
 }
