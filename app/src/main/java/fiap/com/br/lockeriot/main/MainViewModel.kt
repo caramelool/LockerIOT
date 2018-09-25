@@ -43,9 +43,11 @@ class MainViewModel(
                         startFingerprint()
                     }
                     is FingerprintStatus.Failure -> {
+                        notifyFailureLockerRepository()
                         delayToIdle()
                     }
                     is FingerprintStatus.Error -> {
+                        notifyFailureLockerRepository()
                         delayToIdle(30000)
                         startFingerprint()
                     }
@@ -62,6 +64,10 @@ class MainViewModel(
 
     private fun notifyLockerRepository() {
         lockerStatusRepository.notifty()
+    }
+
+    private fun notifyFailureLockerRepository() {
+        lockerStatusRepository.notiftyFailure()
     }
 
     private suspend fun delayToIdle(time: Long = 2000) {

@@ -13,6 +13,11 @@ class FirebaseModule {
 
     @Provides
     @Named("locker")
-    fun provideReference(database: FirebaseDatabase)
+    fun provideLockerReference(database: FirebaseDatabase)
             = database.getReference("locker")
+
+    @Provides
+    @Named("failure")
+    fun provideFailureReference(database: FirebaseDatabase)
+            = database.getReference("failure")
 }
