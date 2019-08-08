@@ -8,6 +8,7 @@ import fiap.com.br.lockeriot.dagger.DaggerApplicationComponent
 import fiap.com.br.lockeriot.dagger.module.ApplicationModule
 import javax.inject.Inject
 
+//Comment test
 class LockerApplication: Application(), HasActivityInjector {
 
     @Inject
